@@ -1,0 +1,16 @@
+cc_binary(
+  name = "main",
+  srcs = [
+    "main.c",
+  ],
+  deps = [
+    ":tcp_server",
+  ],
+)
+
+cc_library(
+  name = "tcp_server",
+  hdrs = [
+    "tcp_server.h",
+  ],
+)
