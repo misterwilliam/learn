@@ -1,0 +1,32 @@
+cc_binary(
+  name = "main",
+  srcs = [
+    "main.cc",
+  ],
+  deps = [
+    ":stats",
+    "@com_google_absl//absl/debugging:failure_signal_handler",
+    "@com_google_absl//absl/debugging:symbolize",
+  ],
+)
+
+cc_library(
+  name = "stats",
+  hdrs = [
+    "stats.h"
+  ],
+  srcs = [
+    "stats.cc"
+  ],
+)
+
+cc_test(
+  name = "stats_test",
+  srcs = [
+    "stats_test.cc",
+  ],
+  deps = [
+    ":stats",
+    "@com_google_googletest//:gtest_main",
+  ],
+)
