@@ -1,0 +1,27 @@
+cc_binary(
+  name = "example",
+  srcs = [
+    "example.c",
+  ],
+  deps = [
+    ":tokenization",
+  ],
+)
+
+cc_library(
+  name = "tokenization",
+  hdrs = [
+    "tokenization.h",
+  ],
+)
+
+cc_test(
+  name = "tokenization_test",
+  srcs = [
+    "tokenization_test.cc",
+  ],
+  deps = [
+    ":tokenization",
+    "@com_google_googletest//:gtest_main",
+  ],
+)

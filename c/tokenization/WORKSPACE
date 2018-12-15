@@ -1,0 +1,8 @@
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+# GoogleTest/GoogleMock framework.
+git_repository(
+    name = "com_google_googletest",
+    remote = "https://github.com/abseil/googletest.git",
+    tag = "release-1.8.1",
+)
