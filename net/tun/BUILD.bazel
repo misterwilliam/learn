@@ -1,0 +1,4 @@
+cc_binary(
+  name = "tun_reader",
+  srcs = [ "tun_reader.cc" ],
+)
