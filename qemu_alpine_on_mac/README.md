@@ -21,5 +21,5 @@ $ qemu-system-x86_64 -m 512 -nic user -boot d -cdrom alpine-standard-3.11.3-x86_
 
 ## Run Alpine on QEMU
 ```
-$ qemu-system-x86_64 -m 512 -nic user -boot d -cdrom alpine-standard-3.11.0_rc5-x86_64.iso -hda alpine.qcow2
+$ qemu-system-x86_64 -m 512 -nic user -hda alpine.qcow2
 ```
