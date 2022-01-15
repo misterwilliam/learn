@@ -1,3 +1,4 @@
 fn main() {
-    println!("Hello, world!");
+    let img = draw::create_image();
+    println!("{:?}", img);
 }
