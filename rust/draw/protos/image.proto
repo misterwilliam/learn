@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package draw.image;
+
+message RGB {
+  // Color of a pixel packed into 32 bits. First byte is red, second byte green,
+  // third byte is blue, and fourth byte is not used.
+  // First 3 bytes contain values from 0 to 255.
+  //
+  //  0       8      16      24      32
+  //  |-------|-------|-------|-------|
+  //  |  red  | green | blue  | blank |
+  //  |-------|-------|-------|-------|
+  //
+  sfixed32 val = 1;
+}
+
+message Image {
+  uint64 rows = 1;
+  uint64 cols = 2;
+  repeated RGB rgbs = 3;
+}
