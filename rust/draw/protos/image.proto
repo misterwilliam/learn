@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package draw.image;
+package draw;
 
 message RGB {
   // Color of a pixel packed into 32 bits. First byte is red, second byte green,
