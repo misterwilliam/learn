@@ -4,13 +4,12 @@ syntax = "proto3";
 package draw;
 
 message RGB {
-  // Color of a pixel packed into 32 bits. First byte is red, second byte green,
-  // third byte is blue, and fourth byte is not used.
-  // First 3 bytes contain values from 0 to 255.
+  // Color of a pixel packed into 32 bits. First bytes are unused, then comes
+  // red, green, and blue.
   //
-  //  0       8      16      24      32
+  // 32      24      16       8       0
   //  |-------|-------|-------|-------|
-  //  |  red  | green | blue  | blank |
+  //  | blank |  red  | green | blue  |
   //  |-------|-------|-------|-------|
   //
   sfixed32 raw_val = 1;
