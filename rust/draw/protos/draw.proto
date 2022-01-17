@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+// Prost will be put generated rust code in draw.rs.
 package draw;
 
 message RGB {
@@ -12,7 +13,7 @@ message RGB {
   //  |  red  | green | blue  | blank |
   //  |-------|-------|-------|-------|
   //
-  sfixed32 val = 1;
+  sfixed32 raw_val = 1;
 }
 
 message Image {

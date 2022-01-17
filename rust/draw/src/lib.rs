@@ -1,8 +1,5 @@
-// Include the `draw` module, which is generated from image.proto.
-// pub mod draw {
-//     include!(concat!(env!("OUT_DIR"), "/draw.image.rs"));
-// }
-include!(concat!(env!("OUT_DIR"), "/draw.image.rs"));
+// Include prost generated code from draw.proto.
+include!(concat!(env!("OUT_DIR"), "/draw.rs"));
 
 // pub fn create_image() -> draw::Image {
 //     let img = draw::Image::default();
