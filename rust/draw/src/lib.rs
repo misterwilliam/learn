@@ -1,33 +1,20 @@
-// Include prost generated code from draw.proto.
-include!(concat!(env!("OUT_DIR"), "/draw.rs"));
+pub const WHITE: image::Rgb<u8> = image::Rgb([255, 255, 255]);
+pub const BLACK: image::Rgb<u8> = image::Rgb([0, 0, 0]);
 
-// Struct Rgb is packed into an i32 in the following format.
-//
-// Color of a pixel packed into 32 bits. First bytes are unused, then comes
-// red, green, and blue.
-//
-// 32      24      16       8       0
-//  |-------|-------|-------|-------|
-//  | blank |  red  | green | blue  |
-//  |-------|-------|-------|-------|
-//
-
-const RED_MASK: i32 = 0xff0000;
-const GREEN_MASK: i32 = 0x00ff00;
-const BLUE_MASK: i32 = 0x0000ff;
-
-impl Rgb {
-    pub fn red(&self) -> u8 {
-        let val = (self.raw_val & RED_MASK) >> 16;
-        (val).try_into().unwrap()
+pub fn clear(img: &mut image::RgbImage, rgb: &image::Rgb<u8>) {
+    for (_x, _y, pixel) in img.enumerate_pixels_mut() {
+        *pixel = *rgb;
     }
-    pub fn green(&self) -> u8 {
-        let val = (self.raw_val & GREEN_MASK) >> 8;
-        (val).try_into().unwrap()
-    }
-    pub fn blue(&self) -> u8 {
-        let val = self.raw_val & BLUE_MASK;
-        (val).try_into().unwrap()
+}
+
+pub fn draw_line(img: &mut image::RgbImage, startx: u32, starty: u32, endx: u32, endy: u32) {
+    img.put_pixel(startx, starty, BLACK);
+    let mut y = starty;
+    let dy = (endy - starty) / (endx - startx);
+
+    for x in startx..endx {
+        img.put_pixel(x, y, BLACK);
+        y = y + dy;
     }
 }
 
@@ -36,16 +23,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn getters() {
-        let rgb = Rgb {raw_val: 0x123456_i32};
-        assert_eq!(rgb.red(), 0x12);
-        assert_eq!(rgb.green(), 0x34);
-        assert_eq!(rgb.blue(), 0x56);
-    }
+    fn three_by_three_diag_line() {
+        let mut imgbuf = image::ImageBuffer::new(3, 3);
+        clear(&mut imgbuf, &WHITE);
+        draw_line(&mut imgbuf, 0, 0, 3, 3);
 
-    #[test]
-    fn blah() {
-        let n = 0x12i8;
-        assert_eq!(n.to_be(), n);
+        assert_eq!(*imgbuf.get_pixel(0, 0), BLACK);
+        assert_eq!(*imgbuf.get_pixel(1, 1), BLACK);
+        assert_eq!(*imgbuf.get_pixel(2, 2), BLACK);
     }
 }
