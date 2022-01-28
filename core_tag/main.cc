@@ -5,11 +5,14 @@
 #include "core_tag.h"
 
 int main() {
-  auto core_tag = GetCoreTag(0);
-  if (!core_tag.ok()) {
-    std::cout << core_tag.status();
-  } else {
-    std::cout << "Core Tag: " << *core_tag;
+  std::cout << "Starting thread" << std::endl;
+  auto thread_ctx = GetThreadCtx();
+  std::cout << DebugString(thread_ctx) << std::endl;
+
+  int ok = unshare(CLONE_NEWPID);
+  if (ok != 0) {
+    std::cout << "unshare errno=" << strerror(errno) << std::endl;
+    return 0;
   }
 
   return 0;
