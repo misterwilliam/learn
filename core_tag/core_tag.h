@@ -27,4 +27,6 @@ absl::StatusOr<unsigned long> GetCoreTag(pid_t pid);
 absl::Status DoCoreTag(pid_t pid);
 absl::Status InheritCoreTagFromPid(pid_t pid);
 
+absl::Status core_tag_launcher();
+
 #endif  // CORE_TAG_H_
