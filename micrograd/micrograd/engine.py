@@ -69,7 +69,8 @@ def draw_dot(root: Value):
     for node in nodes:
         # For each Value create a node.
         uid = str(id(node))
-        graph.node(uid, label="{%s | data: %.4f}" % (node.label, node.data), shape="record")
+        graph.node(uid, label="{%s | data: %.4f | grad: %.4f}" % (
+            node.label, node.data, node.grad), shape="record")
         if node.op:
             # If the Value is also an op create another node for op, and then
             # connect from op to value node.
