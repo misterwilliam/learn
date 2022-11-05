@@ -1,11 +1,15 @@
 import graphviz
 import typing
 
+
 class Value:
 
-    def __init__(self, data: typing.Union[float, int], children = None, op = None):
+    def __init__(self, data: typing.Union[float, int], children=None, op=None,
+                 label=""):
         self.children = children if children is not None else ()
         self.op = op
+        self.label = label
+        self.grad = 0.0
 
         if isinstance(data, float):
             self.data = data
@@ -13,7 +17,7 @@ class Value:
         if isinstance(data, int):
             self.data = float(data)
             return
-        
+
         raise TypeError("Values can only be floats or ints.")
 
     def __repr__(self):
@@ -63,9 +67,9 @@ def draw_dot(root: Value):
     graph = graphviz.Digraph(format="svg", graph_attr={"rankdir": "LR"})
     nodes, edges = trace(root)
     for node in nodes:
-        # For each Value create a node. 
+        # For each Value create a node.
         uid = str(id(node))
-        graph.node(uid, label="{data: %.4f}" % node.data, shape="record")
+        graph.node(uid, label="{%s | data: %.4f}" % (node.label, node.data), shape="record")
         if node.op:
             # If the Value is also an op create another node for op, and then
             # connect from op to value node.
