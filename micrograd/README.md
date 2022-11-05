@@ -7,5 +7,9 @@
 
 ```sh
 # Install dependencies
+
+# Install python wrapper to graphviz.
 $ pip install graphviz
+# Install actual graphviz.
+$ brew install graphviz
 ```
