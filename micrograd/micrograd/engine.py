@@ -39,10 +39,10 @@ def trace(root: Value):
     while todo:
         curr = todo.pop()
         for child in curr.children:
-            # Since duplicate duplicate nodes are never popped from todo
-            # adding all the edges from curr never adds duplicate edges.
-            # Since in neural nets values from from the child to the parents
-            # add an edge from child to parent.
+            # Since duplicate nodes are never popped from todo adding all the
+            # edges from curr never adds duplicate edges. Since in neural
+            # nets, values flow from the child to the parents, add an edge from
+            # child to parent.
             edges.add((child, curr))
             if child not in seen:
                 seen.add(child)
