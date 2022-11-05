@@ -33,16 +33,23 @@ class Value:
 
 
 def trace(root: Value):
+    """Return graph of ancestors to root.
+
+    Find all the ancestor values, and all the edges connecting these values.
+
+    Returns pair of sets. First set are all the values. The second set is a set
+    of pairs of values which are the edges between the values.
+    """
     seen, edges = set(), set()
     todo = [root]
     seen.add(root)
     while todo:
         curr = todo.pop()
         for child in curr.children:
-            # Since duplicate nodes are never popped from todo adding all the
-            # edges from curr never adds duplicate edges. Since in neural
-            # nets, values flow from the child to the parents, add an edge from
-            # child to parent.
+            # Since duplicate nodes are never popped from todo
+            # adding all the edges from curr never adds duplicate edges.
+            # Since in neural nets values from from the child to the parents
+            # add an edge from child to parent.
             edges.add((child, curr))
             if child not in seen:
                 seen.add(child)
