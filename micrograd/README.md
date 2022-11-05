@@ -2,3 +2,10 @@
 
 * Original repo: https://github.com/karpathy/micrograd
 * YouTube video: https://www.youtube.com/watch?v=VMj-3S1tku0
+
+## Setup
+
+```sh
+# Install dependencies
+$ pip install graphviz
+```
