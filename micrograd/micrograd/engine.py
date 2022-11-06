@@ -1,15 +1,18 @@
 import graphviz
+import math
 import typing
 
 
 class Value:
 
     def __init__(self, data: typing.Union[float, int], children=None, op=None,
-                 label=""):
+                 label="", backward=lambda: None):
         self.children = children if children is not None else ()
         self.op = op
         self.label = label
         self.grad = 0.0
+        # _backward propagates gradients from parents to children.
+        self._backward = lambda: None
 
         if isinstance(data, float):
             self.data = data
@@ -24,22 +27,64 @@ class Value:
         return f"Value(data={self.data})"
 
     def __add__(self, other):
-        return Value(self.data + other.data, children=(self, other), op="+")
+        out = Value(self.data + other.data, children=(self, other), op="+")
+
+        # _backward propagates the gradients to the children. Because of chain
+        # rule. _backward() is always of the form:
+        # def _backward():
+        #   child_1.grad += <local gradient w/ respect to child_1> * out.grad
+        #   child_2.grad += <local gradient w/ respect to child_2> * out.grad
+        def _backward():
+            self.grad += out.grad
+            other.grad += out.grad
+        out._backward = _backward
+
+        return out
 
     def __mul__(self, other):
-        return Value(self.data * other.data, children=(self, other), op="*")
+        out = Value(self.data * other.data, children=(self, other), op="*")
+
+        def _backward():
+            self.grad += out.grad * other.data
+            other.grad += out.grad * other.data
+        out._backward = _backward
+
+        return out
 
     def __sub__(self, other):
-        return Value(self.data - other.data, children=(self, other), op="-")
+        out = Value(self.data - other.data, children=(self, other), op="-")
+
+        def _backward():
+            self.grad += out.grad
+            other.grad -= out.grad
+        out._backward = _backward
+
+        return out
 
     def __neg__(self):
-        return Value(-self.data, children=(self,), op="neg")
+        out = Value(-self.data, children=(self,), op="neg")
+
+        def _backward():
+            self.grad -= out.grad
+        out._backward = _backward
+
+        return out
+
+    def tanh(self):
+        t = (math.exp(2**self.data) - 1) / (math.exp(2**self.data) + 1)
+        out = Value(t, children=(self,), op="tanh")
+
+        def _backward():
+            self.grad += (1 - t**2) * out.grad
+        out._backward = _backward
+
+        return out
 
 
 def trace(root: Value):
-    """Return graph of ancestors to root.
+    """Return graph of children from root.
 
-    Find all the ancestor values, and all the edges connecting these values.
+    Find all the children, and all the edges connecting these values.
 
     Returns pair of sets. First set are all the values. The second set is a set
     of pairs of values which are the edges between the values.
