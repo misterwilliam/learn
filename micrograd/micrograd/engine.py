@@ -25,6 +25,21 @@ class Value:
 
     def __repr__(self):
         return f"Value(data={self.data})"
+    
+    def backward(self):
+        nodes = []
+        visited = set()
+        def dfs(v):
+            nodes.append(v)
+            visited.add(v)
+            for child in v.children:
+                if child not in visited:
+                    dfs(child)
+        dfs(self)
+        
+        self.grad = 1
+        for v in nodes:
+            v._backward()
 
     def __add__(self, other):
         out = Value(self.data + other.data, children=(self, other), op="+")
@@ -45,8 +60,8 @@ class Value:
         out = Value(self.data * other.data, children=(self, other), op="*")
 
         def _backward():
-            self.grad += out.grad * other.data
-            other.grad += out.grad * other.data
+            self.grad += other.data * out.grad
+            other.grad += self.data * out.grad
         out._backward = _backward
 
         return out
