@@ -39,6 +39,16 @@ class TestValue(unittest.TestCase):
         self.assertEqual(a.grad, 3)
         self.assertEqual(b.grad, 2)
 
+    def test_true_div(self):
+        a = micrograd.autodiff.Value(2)
+        b = micrograd.autodiff.Value(4)
+        c = a / b
+        self.assertEqual(c.data, 0.5)
+
+        c.backward()
+        self.assertEqual(a.grad, 1/4)
+        self.assertEqual(b.grad, 6/16)
+
     def test_neg(self):
         a = micrograd.autodiff.Value(3)
         b = -a
