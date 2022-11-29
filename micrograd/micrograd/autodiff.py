@@ -25,7 +25,7 @@ class Value:
 
     def __repr__(self):
         return f"Value(data={self.data})"
-    
+
     def backward(self):
         nodes = []
         visited = set()
@@ -36,26 +36,27 @@ class Value:
                 if child not in visited:
                     dfs(child)
         dfs(self)
-        
+
         self.grad = 1
         for v in nodes:
             v._backward()
 
     def __add__(self, other):
-        out = Value(self.data + other.data, children=(self, other), op="+")
+        return add(self, other)
+#         out = Value(self.data + other.data, children=(self, other), op="+")
 
-        # _backward propagates the gradients to the children. Because of chain
-        # rule. _backward() is always of the form:
-        # def _backward():
-        #   child_1.grad += <local gradient w/ respect to child_1> * out.grad
-        #   child_2.grad += <local gradient w/ respect to child_2> * out.grad
-        def _backward():
-            self.grad += out.grad
-            other.grad += out.grad
-        out._backward = _backward
+#         # _backward propagates the gradients to the children. Because of chain
+#         # rule. _backward() is always of the form:
+#         # def _backward():
+#         #   child_1.grad += <local gradient w/ respect to child_1> * out.grad
+#         #   child_2.grad += <local gradient w/ respect to child_2> * out.grad
+#         def _backward():
+#             self.grad += out.grad
+#             other.grad += out.grad
+#         out._backward = _backward
 
-        return out
-    
+#         return out
+
     def __sub__(self, other):
         out = Value(self.data - other.data, children=(self, other), op="-")
 
@@ -75,15 +76,15 @@ class Value:
         out._backward = _backward
 
         return out
-    
+
     def __truediv__(self, other):
         out = Value(self.data / other.data, children=(self, other), op="/")
-        
+
         def _backward():
             self.grad += (1 / other.data) * out.grad
             other.grad += (-self.data) * out.grad
         out._backward = _backward
-        
+
         return out
 
     def __neg__(self):
@@ -104,6 +105,22 @@ class Value:
         out._backward = _backward
 
         return out
+
+
+def add(a: Value, b: Value):
+    out = Value(a.data + b.data, children = (a, b), op="+")
+
+    def _backward():
+        # _backward propagates the gradients to the children. Because of chain
+        # rule. _backward() is always of the form:
+        # def _backward():
+        #   child_1.grad += <local gradient w/ respect to child_1> * out.grad
+        #   child_2.grad += <local gradient w/ respect to child_2> * out.grad
+        a.grad += out.grad
+        b.grad += out.grad
+    out._backward = _backward
+
+    return out
 
 
 def trace(root: Value):
