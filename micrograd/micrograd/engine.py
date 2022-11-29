@@ -55,6 +55,16 @@ class Value:
         out._backward = _backward
 
         return out
+    
+    def __sub__(self, other):
+        out = Value(self.data - other.data, children=(self, other), op="-")
+
+        def _backward():
+            self.grad += out.grad
+            other.grad -= out.grad
+        out._backward = _backward
+
+        return out
 
     def __mul__(self, other):
         out = Value(self.data * other.data, children=(self, other), op="*")
@@ -65,15 +75,15 @@ class Value:
         out._backward = _backward
 
         return out
-
-    def __sub__(self, other):
-        out = Value(self.data - other.data, children=(self, other), op="-")
-
+    
+    def __truediv__(self, other):
+        out = Value(self.data / other.data, children=(self, other), op="/")
+        
         def _backward():
-            self.grad += out.grad
-            other.grad -= out.grad
+            self.grad += (1 / other.data) * out.grad
+            other.grad += (-self.data) * out.grad
         out._backward = _backward
-
+        
         return out
 
     def __neg__(self):

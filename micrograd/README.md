@@ -13,3 +13,8 @@ $ pip install graphviz
 # Install actual graphviz.
 $ brew install graphviz
 ```
+
+## Test
+```sh
+$ python -m unittest
+```
