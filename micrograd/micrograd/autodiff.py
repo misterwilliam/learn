@@ -43,19 +43,6 @@ class Value:
 
     def __add__(self, other):
         return add(self, other)
-#         out = Value(self.data + other.data, children=(self, other), op="+")
-
-#         # _backward propagates the gradients to the children. Because of chain
-#         # rule. _backward() is always of the form:
-#         # def _backward():
-#         #   child_1.grad += <local gradient w/ respect to child_1> * out.grad
-#         #   child_2.grad += <local gradient w/ respect to child_2> * out.grad
-#         def _backward():
-#             self.grad += out.grad
-#             other.grad += out.grad
-#         out._backward = _backward
-
-#         return out
 
     def __sub__(self, other):
         out = Value(self.data - other.data, children=(self, other), op="-")
