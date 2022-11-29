@@ -45,24 +45,10 @@ class Value:
         return add(self, other)
 
     def __sub__(self, other):
-        out = Value(self.data - other.data, children=(self, other), op="-")
-
-        def _backward():
-            self.grad += out.grad
-            other.grad -= out.grad
-        out._backward = _backward
-
-        return out
+        return add(self, mul(Value(-1), other))
 
     def __mul__(self, other):
-        out = Value(self.data * other.data, children=(self, other), op="*")
-
-        def _backward():
-            self.grad += other.data * out.grad
-            other.grad += self.data * out.grad
-        out._backward = _backward
-
-        return out
+        return mul(self, other)
 
     def __truediv__(self, other):
         out = Value(self.data / other.data, children=(self, other), op="/")
@@ -75,13 +61,7 @@ class Value:
         return out
 
     def __neg__(self):
-        out = Value(-self.data, children=(self,), op="neg")
-
-        def _backward():
-            self.grad -= out.grad
-        out._backward = _backward
-
-        return out
+        return mul(Value(-1), self)
 
     def tanh(self):
         t = (math.exp(2**self.data) - 1) / (math.exp(2**self.data) + 1)
@@ -105,6 +85,17 @@ def add(a: Value, b: Value):
         #   child_2.grad += <local gradient w/ respect to child_2> * out.grad
         a.grad += out.grad
         b.grad += out.grad
+    out._backward = _backward
+
+    return out
+
+
+def mul(a: Value, b: Value):
+    out = Value(a.data * b.data, children=(a, b), op="*")
+
+    def _backward():
+        a.grad += b.data * out.grad
+        b.grad += a.data * out.grad
     out._backward = _backward
 
     return out
