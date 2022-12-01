@@ -51,14 +51,10 @@ class Value:
         return mul(self, other)
 
     def __truediv__(self, other):
-        out = Value(self.data / other.data, children=(self, other), op="/")
+        return mul(self, pow(other, Value(-1)))
 
-        def _backward():
-            self.grad += (1 / other.data) * out.grad
-            other.grad += (-self.data) * out.grad
-        out._backward = _backward
-
-        return out
+    def __pow__(self, other):
+        return power(self, other)
 
     def __neg__(self):
         return mul(Value(-1), self)
@@ -96,6 +92,17 @@ def mul(a: Value, b: Value):
     def _backward():
         a.grad += b.data * out.grad
         b.grad += a.data * out.grad
+    out._backward = _backward
+
+    return out
+
+
+def power(a: Value, b:Value):
+    out = Value(a.data ** b.data, children=(a, b), op="%.2f^%.2f" % (a.data, b.data))
+
+    def _backward():
+        a.grad += b.data * (a.data ** (b.data - 1)) * out.grad
+        b.grad += (a.data ** b.data) * math.log(a.data) * out.grad
     out._backward = _backward
 
     return out
