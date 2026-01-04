@@ -114,10 +114,8 @@ def run_test_suite():
     else:
       logging.info("PASS")
 
-    logging.info("-- (Multithead) Test: %s --" % testCase.name)
+    logging.info("-- (Multi-thread) Test: %s --" % testCase.name)
     expected = testCase.a @ testCase.b
-    # matmul = single_thread_matmul
-    # matmul = multi_thread_matmul
     start_sec = time.monotonic()
     got = multi_thread_matmul(testCase.a, testCase.b, 7)
     logging.info("Duration: %.3f (secs)" % (time.monotonic() - start_sec))
