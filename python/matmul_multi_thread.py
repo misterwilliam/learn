@@ -126,10 +126,8 @@ def run_test_suite():
     else:
       logging.info("PASS")
 
-  threads = []
   for i, t in enumerate(testCases):
-    # if i != 0:
-    #   continue
+    logging.info("Test Case: %d", i)
     run_test(t)
 
 def do_benchmark():
